@@ -350,6 +350,13 @@ def delete_user(user_id):
     flash(f"User '{user.username}' deleted successfully.", "warning")
     return redirect(url_for('admin_users'))
 
+# ---------------------- DB Initialization Command ----------------------
+@app.cli.command("init-db")
+def init_db_command():
+    """Creates the database tables and the admin user."""
+    db.create_all()
+    ensure_admin()
+    print("Initialized the database and created admin user.")
 
 # ---------------------- Bootstrap the DB ----------------------
 if __name__ == "__main__":

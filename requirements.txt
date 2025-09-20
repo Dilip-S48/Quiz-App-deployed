@@ -1,0 +1,4 @@
+This file lists the Python packages needed to run the app.
+The deployment service uses this file to install dependencies.
+Flask>=2.0
+gunicorn>=20.0

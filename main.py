@@ -5,10 +5,25 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import json
+import os
+
+import os  # <-- Make sure this is at the top with your other imports!
 
 app = Flask(__name__)
+
+# --- Production vs. Local Database Configuration ---
+# This new block correctly chooses the database.
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    # We are in production on Render, so use the PostgreSQL database.
+    # The .replace() is a best-practice for SQLAlchemy compatibility.
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+else:
+    # We are running locally on your computer, so use the SQLite file.
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz.db'
+# ---------------------------------------------------
+
 app.config['SECRET_KEY'] = "quiz_secret_key_change_me"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
